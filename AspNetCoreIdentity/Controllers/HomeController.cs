@@ -7,10 +7,22 @@ using System.Threading.Tasks;
 
 namespace AspNetCoreIdentity.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
-        [Authorize]
+        [AllowAnonymous]
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult Autenticado()
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult Secret()
         {
             return View();
         }
