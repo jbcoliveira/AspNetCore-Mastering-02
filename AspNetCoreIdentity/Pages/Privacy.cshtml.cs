@@ -11,6 +11,7 @@ namespace AspNetCoreIdentity.Pages
     {
         public void OnGet()
         {
+            throw new Exception("Erro");
         }
     }
 }
