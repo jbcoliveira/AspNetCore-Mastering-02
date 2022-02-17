@@ -1,3 +1,5 @@
+using KissLog;
+
 using AspNetCoreIdentity.Areas.Identity.Data;
 using AspNetCoreIdentity.Config;
 using AspNetCoreIdentity.Extensions;
@@ -10,6 +12,24 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using KissLog.AspNetCore;
+using KissLog.CloudListeners.RequestLogsListener;
+using KissLog.CloudListeners.Auth;
+
+using KissLog;
+using KissLog.AspNetCore;
+using KissLog.CloudListeners.Auth;
+using KissLog.CloudListeners.RequestLogsListener;
+using KissLog.Formatting;
+using KissLog.Listeners;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Text;
 
 namespace AspNetCoreIdentity
 {
@@ -36,11 +56,15 @@ namespace AspNetCoreIdentity
         
         public void ConfigureServices(IServiceCollection services)
         {
+
+            
             services.AddIdentityConfig(Configuration);
 
             services.AddAuthorizationConfig();
 
             services.ResolveDependencies();
+
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -58,6 +82,7 @@ namespace AspNetCoreIdentity
                 app.UseHsts();
             }
 
+            app.UseKissLogMiddleware();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
@@ -68,6 +93,12 @@ namespace AspNetCoreIdentity
             {
                 routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseKissLogMiddleware(options => {
+                KissLogConfig.ConfigureKissLog(options, Configuration);
+            });
         }
+
+        
     }
 }
